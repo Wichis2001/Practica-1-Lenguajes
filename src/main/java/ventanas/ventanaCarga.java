@@ -4,7 +4,10 @@
  */
 package ventanas;
 
+import datos.CargaDatos;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
@@ -12,7 +15,8 @@ import javax.swing.JOptionPane;
  * @author luis
  */
 public class ventanaCarga extends javax.swing.JFrame {
-
+    private String archivoALeer;
+    private CargaDatos cargaDatos;
     /**
      * Creates new form ventanaCarga
      */
@@ -118,9 +122,27 @@ public class ventanaCarga extends javax.swing.JFrame {
     }//GEN-LAST:event_salirKeyPressed
 
     private void cargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargaActionPerformed
-        VentanaAnalizador ventana = new VentanaAnalizador();
-        ventana.setVisible(true);
-        this.setVisible(false);
+        //Agregamos un JFileChooser para poeder hacer la respectiva archovo
+        JFileChooser buscarArchivo = new JFileChooser();
+        int opcion = buscarArchivo.showOpenDialog(this);
+        if(opcion == JFileChooser.APPROVE_OPTION){
+            //Buscamos el archivo y procedemos a hacer la lectura del mismo
+            String archivo = buscarArchivo.getSelectedFile().getAbsolutePath();
+            this.archivoALeer = archivo;
+            try{
+                File archivoCargar = new File(archivoALeer);
+                if(archivoCargar.exists()){
+                    //Hacemos una llamada al Hilo de carga para poder almacenar cada valor en su respectiva Dirección
+                    cargaDatos = new CargaDatos(archivoCargar, this);
+                    cargaDatos.anilizarTexto();
+
+                }
+                    
+                //Error de punto nulo
+            } catch(NullPointerException e){
+                System.err.println(e);
+            }
+        }
     }//GEN-LAST:event_cargaActionPerformed
 
     /**
@@ -148,6 +170,9 @@ public class ventanaCarga extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ventanaCarga.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

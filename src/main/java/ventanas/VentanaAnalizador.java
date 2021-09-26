@@ -4,18 +4,30 @@
  * and open the template in the editor.
  */
 package ventanas;
+import java.awt.Color;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import tokens.NumeroLinea;
 
 /**
  *
  * @author luis
  */
 public class VentanaAnalizador extends javax.swing.JFrame {
-
+    NumeroLinea numeroLinea;
     /**
      * Creates new form VentanaAnalizador
      */
     public VentanaAnalizador() {
         initComponents();
+        this.setLocationRelativeTo(null);
+        numeroLinea=new NumeroLinea(jTextArea1);
+        jScrollPane1.setRowHeaderView(numeroLinea);
+        
+    }
+    
+    public JTextArea getArea(){
+        return this.jTextArea1;
     }
 
     /**
@@ -30,16 +42,19 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setFont(new java.awt.Font("Purisa", 3, 48)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("ANALIZADOR LEXICO");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 0, 640, -1));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 0, 660, -1));
 
+        jScrollPane1.setBackground(new java.awt.Color(0, 153, 153));
         jScrollPane1.setForeground(new java.awt.Color(51, 51, 51));
 
         jTextArea1.setBackground(new java.awt.Color(0, 153, 153));
@@ -49,14 +64,18 @@ public class VentanaAnalizador extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 210, 850, 370));
 
+        jButton1.setText("jButton1");
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 90, -1, -1));
+
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/FondoGranja.jpg"))); // NOI18N
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 930, 620));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 930, 610));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
