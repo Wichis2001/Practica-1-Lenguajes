@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 import ventanas.VentanaAnalizador;
+import ventanas.VentanaPatrones;
 import ventanas.ventanaCarga;
 
 /**
@@ -18,6 +19,8 @@ import ventanas.ventanaCarga;
  * @author luis
  */
 public class CargaDatos {
+    public static VentanaPatrones ventanaPatrones= new VentanaPatrones();
+    public static VentanaAnalizador ventana = new VentanaAnalizador();
     private File archivoAProcesar;
     private ventanaCarga ventanaCarga;
 
@@ -53,8 +56,7 @@ public class CargaDatos {
      * Este metodo se encarga de la lectura del archivo de texto y la extraccion de datos para cada objeto respectivamente 
      */
     private void leerArchivo() throws FileNotFoundException, IOException, ArrayIndexOutOfBoundsException{
-        //Leemos el texto del archivo
-        VentanaAnalizador ventana = new VentanaAnalizador();
+        //Leemos el texto del archivo       
         BufferedReader lector = new BufferedReader(new FileReader(this.archivoAProcesar));
         //Usamos esta variable para la lectura de linea por linea
         String auxiliar = lector.readLine();
@@ -66,11 +68,13 @@ public class CargaDatos {
             //Asignamos los datos obtenidos en el Jtextarea
             if(temporal!=""){
                ventana.getArea().append(temporal);
+               ventanaPatrones.getArea().append(temporal);
                temporal="";
             }
            
             auxiliar = lector.readLine();
             if(auxiliar!=null){
+               ventanaPatrones.getArea().append("\n");
                ventana.getArea().append("\n"); 
             }        
         }       

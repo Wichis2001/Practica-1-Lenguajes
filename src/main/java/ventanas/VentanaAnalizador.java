@@ -4,11 +4,15 @@
  * and open the template in the editor.
  */
 package ventanas;
+import datos.CargaDatos;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.text.BadLocationException;
 import manejadores.MenejadorAnalizador;
 import tokens.NumeroLinea;
 
@@ -28,6 +32,8 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         numeroLinea=new NumeroLinea(jTextArea1);
         jScrollPane1.setRowHeaderView(numeroLinea);
         buscarPatrones.requestFocus();
+        reporteErrores.setEnabled(false);
+        reporteToken.setEnabled(false);
     }
     
     public JTextArea getArea(){
@@ -115,6 +121,11 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         analizarToken.setFont(new java.awt.Font("Ubuntu", 3, 18)); // NOI18N
         analizarToken.setForeground(new java.awt.Color(0, 0, 0));
         analizarToken.setText("Analizar Tokens");
+        analizarToken.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                analizarTokenActionPerformed(evt);
+            }
+        });
         analizarToken.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 analizarTokenKeyPressed(evt);
@@ -156,7 +167,11 @@ public class VentanaAnalizador extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buscarPatronesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarPatronesActionPerformed
-        manejador.resaltarTexto(jTextArea1);
+        try {
+            manejador.resaltarTexto(CargaDatos.ventanaPatrones.getArea());
+        } catch (BadLocationException ex) {
+            Logger.getLogger(VentanaAnalizador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_buscarPatronesActionPerformed
 
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
@@ -233,6 +248,10 @@ public class VentanaAnalizador extends javax.swing.JFrame {
             buscarPatrones.requestFocus();
          }
     }//GEN-LAST:event_guardarCambiosKeyPressed
+
+    private void analizarTokenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analizarTokenActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_analizarTokenActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
