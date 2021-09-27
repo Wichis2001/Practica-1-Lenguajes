@@ -17,6 +17,79 @@ import javax.swing.text.Highlighter;
  * @author luis
  */
 public class MenejadorAnalizador {
+        String palabra;
+        int posicion = 0;
+        int estadosFinalizacion[] = new int[4];
+        String descripcionFinalizacion[] = new String[4];
+        int estadoActual = 0;
+        // filas s0 --> 0, s1 -> 1, s2 -> 2, , s3 -> 3, s4 -> 4, s5 -> 5
+        // \Letra --> 0
+        // \Digito --> 1
+        // \punto --> 2
+        // \agrupacion --> 3
+        // \puntuacion --> 4
+        // \aritmetico --> 5
+        // error --> -1
+        // no pertenece a mi alfabeto -1
+        int matrizTransicion[][] = new int[6][6]; 
+        {
+            matrizTransicion[0][0]= 1; //Traslado al estado 1 ya que viene una letra 
+            matrizTransicion[0][1]= 2; //Traslado al estado 2 ya que viene un digito
+            matrizTransicion[0][2]= -1; //Error ya que nuestro token no puede comenzar con -1
+            matrizTransicion[0][3]= 4; //Traslado al estado 4 ya que viene un signo de agrupación
+            matrizTransicion[0][4]= 4; //Traslado al estado 4 ya que viene un signo de puntuacion
+            matrizTransicion[0][5]= 4; //Traslado al estado 4 ya que viene un operador aritmetico
+                       
+            matrizTransicion[1][0]= 1; //Permenecemos en el estado 1 ya que hay una letra para poder construir un identificador 
+            matrizTransicion[1][1]= 1; //Permenecemos en el estado 1 ya que hay una letra para poder construir un identificador 
+            matrizTransicion[1][2]= -1; //Error ya que dentro de un identificador no deberia de haber un punto
+            matrizTransicion[1][3]= -1; //Error ya que dentro de un identificador no deberia de haber un signo de agrupacion
+            matrizTransicion[1][4]= -1; //Error ya que dentro de un identificador no deberia de haber un signo de puntuacion
+            matrizTransicion[1][5]= -1; //Error ya que dentro de un identificador no deberia de haber un signo de agrupacion
+            
+            matrizTransicion[2][0]= -1; //Error, ya que se esperaba poder culminar el digito o un punto
+            matrizTransicion[2][1]= 2; //Permanecemos en el estado dos, ya que hay nuevamente un digito
+            matrizTransicion[2][2]= 3; //Nos dirigimos al estado tres, ya que hay un signo de puntuacion para poder construir un decimal
+            matrizTransicion[2][3]= -1; //Error, ya que no se esperaba un signo de agrupacion
+            matrizTransicion[2][3]= -1; //Error, ya que no se esperaba un signo de puntuación
+            matrizTransicion[2][3]= -1; //Error, ya que no se esperaba un operador aritmetico
+            
+            matrizTransicion[3][0]= -1; //Error, ya que no se esperaba una letra
+            matrizTransicion[3][1]= 5; //Nos dirigmos al estado 5, ya que corroboramos que pudimos culminar nuestro número decimal
+            matrizTransicion[3][2]= -1; //Error, ya que no esperaba un punto
+            matrizTransicion[3][3]= -1; //Error, ya que no se esperaba un signo de agrupacion
+            matrizTransicion[3][3]= -1; //Error, ya que no se esperaba un signo de puntuación
+            matrizTransicion[3][3]= -1; //Error, ya que no se esperaba un operador aritmetico
+            
+            matrizTransicion[4][0]= -1; //Error, ya que no se esperaba una letra
+            matrizTransicion[4][1]= -1; //Error, ya que no esperaba un digito
+            matrizTransicion[4][2]= -1; //Error, ya que no esperaba un punto
+            matrizTransicion[4][3]= -1; //Error, ya que no se esperaba un signo de agrupacion
+            matrizTransicion[4][3]= -1; //Error, ya que no se esperaba un signo de puntuación
+            matrizTransicion[4][3]= -1; //Error, ya que no se esperaba un operador aritmetico
+            
+            matrizTransicion[5][0]= -1; //Error, ya que no se esperaba una letra
+            matrizTransicion[5][1]= 5;  //Permanecemos en el estado 5, ya que tenemos nuevamente un digito
+            matrizTransicion[5][2]= -1; //Error, ya que no esperaba un punto
+            matrizTransicion[5][3]= -1; //Error, ya que no se esperaba un signo de agrupacion
+            matrizTransicion[5][3]= -1; //Error, ya que no se esperaba un signo de puntuación
+            matrizTransicion[5][3]= -1; //Error, ya que no se esperaba un operador aritmetico
+            
+            //Tenemos un identificador
+            estadosFinalizacion[0]=1;
+            descripcionFinalizacion[0]="Identificador";
+            //Tenemos un digito
+            estadosFinalizacion[1]=2;
+            descripcionFinalizacion[1]="Digito";
+            //Tenemos un decimal
+            estadosFinalizacion[2]=5;
+            descripcionFinalizacion[2]="Decimal";
+            //Tenemos un simbolo
+            estadosFinalizacion[3]=4;
+            descripcionFinalizacion[3]="Simbolo";
+        }   
+
+            
     public void resaltarTexto(JTextArea textArea) throws BadLocationException{
         String texto = JOptionPane.showInputDialog(null, "Ingresa el patron a buscar...", "BUSQUEDA PATRON", JOptionPane.INFORMATION_MESSAGE);
         if(texto.equals("")){
@@ -68,8 +141,95 @@ public class MenejadorAnalizador {
                     CargaDatos.ventanaPatrones.setVisible(true);
                     CargaDatos.ventana.setVisible(false);
                 }
-            }
-            
+            }  
         }
     }
+    
+    public void analizarTokens(JTextArea textArea){
+        palabra = textArea.getText();
+
+        while (posicion < palabra.length()) 
+            getToken();
+        /*
+         * for (char caracter : palabra.toCharArray()) { System.out.println(caracter); }
+         */
+
+    }
+
+     public int getSiguienteEstado(int estadoActual, int caracter) {
+        int resultado = -1;
+        if (caracter >= 0 && caracter <= 5) {
+            resultado = matrizTransicion[estadoActual][caracter];
+        }
+        return resultado;
+    }
+
+
+    //alfabeto
+    public int getIntCaracter(char caracter) {
+        int resultado = -1;
+
+        if (Character.isDigit(caracter)) {
+            resultado = 1;
+        } else {
+            if (caracter == '.')
+                resultado = 2;
+            if (Character.isDigit(caracter))
+                resultado = 5;
+        } 
+        
+        if (Character.isLetter(caracter)){
+            resultado= 0;
+        } else {
+            if (caracter == 'ñ')
+                resultado = -1;
+        }
+        
+        if ((caracter == '(')||(caracter == ')')||(caracter == '[')||(caracter == ']')||(caracter == '{')||(caracter == '}')||(caracter == '.')||(caracter == ',')||(caracter == ':')||(caracter == ';')||(caracter == '+')||(caracter == '-')||(caracter == '*')||(caracter == '/')||(caracter == '%')){
+            resultado = 4;
+        }
+
+        return resultado;
+    }
+
+    public String getEstadoAceptacion(int i){
+        String res = "Error";
+        int indice = 0;
+        for (int estadoAceptacion : estadosFinalizacion) {
+            
+            if (estadoAceptacion == i){
+                res = descripcionFinalizacion[indice];
+                break;
+            }
+            indice++;
+        }
+
+        return res;
+    }
+
+    public void getToken() {
+        estadoActual = 0;
+        boolean seguirLeyendo = true;
+        char tmp;
+        String token = "";
+
+        while ((seguirLeyendo) && (posicion < palabra.length())) {
+            if ((Character.isSpaceChar(tmp = palabra.charAt(posicion)))||(palabra.charAt(posicion)) == '\n') {
+                seguirLeyendo = false;
+            } else {
+                // para mi automata
+                int estadoTemporal = getSiguienteEstado(estadoActual, getIntCaracter(tmp));
+                System.out.println("Estado actual " + estadoActual + " caracter "+ tmp + " transicion a "+estadoTemporal);
+                token+=tmp;
+                estadoActual = estadoTemporal;
+
+                System.out.println(tmp);
+            }
+            posicion++;
+        }
+        System.out.println("*********Termino en el estado "+ getEstadoAceptacion(estadoActual) + " token actual : "+token);
+        // verificar el estado de aceptación
+
+    }
+    
 }
