@@ -104,6 +104,7 @@ public class MenejadorAnalizador {
         if(texto.equals("")){
             JOptionPane.showMessageDialog(null, "El campo no puede estar vacio", "ERROR", JOptionPane.ERROR_MESSAGE);
         } else {
+            CargaDatos.ventanaPatrones.getArea().setText(CargaDatos.ventana.getArea().getText());
             int guiaCiclo=0;
             int posicionador=0;
             DefaultHighlighter.DefaultHighlightPainter highlightPainter = new DefaultHighlighter.DefaultHighlightPainter(Color.blue);
