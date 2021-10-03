@@ -256,8 +256,9 @@ public class VentanaAnalizador extends javax.swing.JFrame {
     }//GEN-LAST:event_guardarCambiosKeyPressed
 
     private void analizarTokenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analizarTokenActionPerformed
+        MenejadorAnalizador manejadorSecundario= new  MenejadorAnalizador();
         manejadores.MenejadorAnalizador.errores.clear();
-        manejador.analizarTokens(jTextArea1);
+        manejadorSecundario.analizarTokens(jTextArea1);
         reporteErrores.setEnabled(true);
         reporteToken.setEnabled(true);
     }//GEN-LAST:event_analizarTokenActionPerformed

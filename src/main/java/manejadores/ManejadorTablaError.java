@@ -5,6 +5,8 @@
  */
 package manejadores;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import tokens.Errores;
 import ventanas.VentanaTablaErrores;
@@ -14,7 +16,7 @@ import ventanas.VentanaTablaErrores;
  * @author luis
  */
 public class ManejadorTablaError {
-    
+    DefaultTableCellRenderer alinear = new DefaultTableCellRenderer();
     DefaultTableModel modelo = new DefaultTableModel();
     
     public void llenarTabla(VentanaTablaErrores ventana){
@@ -39,6 +41,10 @@ public class ManejadorTablaError {
             datos[2]= error.getColumna();
             modelo.addRow(datos);
         }
+        alinear.setHorizontalAlignment(SwingConstants.CENTER);
+        tabla.getColumnModel().getColumn(0).setCellRenderer(alinear);
+        tabla.getColumnModel().getColumn(1).setCellRenderer(alinear);
+        tabla.getColumnModel().getColumn(2).setCellRenderer(alinear);
         tabla.setModel(modelo);
     }
 

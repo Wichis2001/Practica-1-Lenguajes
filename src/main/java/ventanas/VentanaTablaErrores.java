@@ -24,6 +24,7 @@ public class VentanaTablaErrores extends javax.swing.JFrame {
     public VentanaTablaErrores() {
         initComponents();
         this.setLocationRelativeTo(null);
+        this.tabla.setEnabled(false);
     }
     
     public JTable getTable(){
@@ -51,8 +52,8 @@ public class VentanaTablaErrores extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Purisa", 3, 48)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel2.setText("BUSQUEDA DE PATRONES");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, 730, -1));
+        jLabel2.setText("REPORTE DE ERRORES");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 10, 730, -1));
 
         salir.setBackground(new java.awt.Color(0, 153, 153));
         salir.setFont(new java.awt.Font("Ubuntu", 3, 18)); // NOI18N
@@ -71,6 +72,7 @@ public class VentanaTablaErrores extends javax.swing.JFrame {
         getContentPane().add(salir, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 490, 170, 90));
 
         tabla.setBackground(new java.awt.Color(0, 153, 153));
+        tabla.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},

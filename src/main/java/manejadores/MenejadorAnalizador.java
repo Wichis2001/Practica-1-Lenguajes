@@ -176,8 +176,7 @@ public class MenejadorAnalizador {
     //alfabeto
     public int getIntCaracter(char caracter) {
         int resultado = -1;
-        
-        if (caracter == 'ñ'){
+        if ((caracter == 'ñ')||(caracter == 'Ñ')){
             resultado = -1;       
         } else if (Character.isDigit(caracter)) {
             resultado = 1;
@@ -225,8 +224,7 @@ public class MenejadorAnalizador {
                     columna--;
                     esEspacio=true;
                 } else if (Character.isSpaceChar(tmp = palabra.charAt(posicion))){
-                    columna--;
-                    int temporal= posicion+1;                
+                    columna--;            
                 } 
                         
                 seguirLeyendo = false;  
