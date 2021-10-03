@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
+import manejadores.ManejadorTablaError;
 import manejadores.MenejadorAnalizador;
 import tokens.NumeroLinea;
 
@@ -94,6 +95,11 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         reporteErrores.setFont(new java.awt.Font("Ubuntu", 3, 18)); // NOI18N
         reporteErrores.setForeground(new java.awt.Color(0, 0, 0));
         reporteErrores.setText("Reporte Errores");
+        reporteErrores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reporteErroresActionPerformed(evt);
+            }
+        });
         reporteErrores.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 reporteErroresKeyPressed(evt);
@@ -250,10 +256,19 @@ public class VentanaAnalizador extends javax.swing.JFrame {
     }//GEN-LAST:event_guardarCambiosKeyPressed
 
     private void analizarTokenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analizarTokenActionPerformed
+        manejadores.MenejadorAnalizador.errores.clear();
         manejador.analizarTokens(jTextArea1);
         reporteErrores.setEnabled(true);
         reporteToken.setEnabled(true);
     }//GEN-LAST:event_analizarTokenActionPerformed
+
+    private void reporteErroresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reporteErroresActionPerformed
+        VentanaTablaErrores ventana = new VentanaTablaErrores();
+        ManejadorTablaError manejadorError= new ManejadorTablaError();
+        manejadorError.llenarTabla(ventana);
+        ventana.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_reporteErroresActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

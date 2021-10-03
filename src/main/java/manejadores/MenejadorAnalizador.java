@@ -6,22 +6,31 @@
 package manejadores;
 import datos.CargaDatos;
 import java.awt.Color;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
+import tokens.Errores;
+
 
 /**
  *
  * @author luis
  */
 public class MenejadorAnalizador {
+        int columnaTemporal=0;
+        Errores error = new Errores();
+        int filaTemporal=0;
+        public static ArrayList<Errores> errores = new ArrayList<>();
         String palabra;
         int posicion = 0;
         int estadosFinalizacion[] = new int[4];
         String descripcionFinalizacion[] = new String[4];
         int estadoActual = 0;
+        int fila=0;
+        int columna=0;
         // filas s0 --> 0, s1 -> 1, s2 -> 2, , s3 -> 3, s4 -> 4, s5 -> 5
         // \Letra --> 0
         // \Digito --> 1
@@ -147,7 +156,6 @@ public class MenejadorAnalizador {
     
     public void analizarTokens(JTextArea textArea){
         palabra = textArea.getText();
-
         while (posicion < palabra.length()) 
             getToken();
         /*
@@ -168,27 +176,22 @@ public class MenejadorAnalizador {
     //alfabeto
     public int getIntCaracter(char caracter) {
         int resultado = -1;
-
-        if (Character.isDigit(caracter)) {
+        
+        if (caracter == 'ñ'){
+            resultado = -1;       
+        } else if (Character.isDigit(caracter)) {
             resultado = 1;
-        } else {
-            if (caracter == '.')
-                resultado = 2;
-            if (Character.isDigit(caracter))
+        } else if (caracter == '.'){
+            resultado = 2;
+            if (Character.isDigit(caracter)){
                 resultado = 5;
-        } 
-        
-        if (Character.isLetter(caracter)){
+            }    
+        } else if (Character.isLetter(caracter)){
             resultado= 0;
-        } else {
-            if (caracter == 'ñ')
-                resultado = -1;
-        }
-        
-        if ((caracter == '(')||(caracter == ')')||(caracter == '[')||(caracter == ']')||(caracter == '{')||(caracter == '}')||(caracter == '.')||(caracter == ',')||(caracter == ':')||(caracter == ';')||(caracter == '+')||(caracter == '-')||(caracter == '*')||(caracter == '/')||(caracter == '%')){
+        } else if ((caracter == '(') || (caracter == ')') || (caracter == '[') || (caracter == ']') || (caracter == '{') || (caracter == '}') || (caracter == '.') || (caracter == ',') || (caracter == ':') || (caracter == ';') || (caracter == '+') || (caracter == '-') || (caracter == '*') || (caracter == '/') || (caracter == '%')) {
             resultado = 4;
-        }
-
+        } 
+               
         return resultado;
     }
 
@@ -209,14 +212,29 @@ public class MenejadorAnalizador {
 
     public void getToken() {
         estadoActual = 0;
+        boolean esEspacio=false;
         boolean seguirLeyendo = true;
         char tmp;
         String token = "";
 
         while ((seguirLeyendo) && (posicion < palabra.length())) {
+            columna++;
             if ((Character.isSpaceChar(tmp = palabra.charAt(posicion)))||(palabra.charAt(posicion)) == '\n') {
-                seguirLeyendo = false;
+                if((palabra.charAt(posicion)) == '\n'){
+                    fila= fila+1;
+                    columna--;
+                    esEspacio=true;
+                } else if (Character.isSpaceChar(tmp = palabra.charAt(posicion))){
+                    columna--;
+                    int temporal= posicion+1;                
+                } 
+                        
+                seguirLeyendo = false;  
             } else {
+                if(palabra.charAt(posicion) == ' '){
+                    esEspacio=true;
+                    seguirLeyendo=false;
+                }
                 // para mi automata
                 int estadoTemporal = getSiguienteEstado(estadoActual, getIntCaracter(tmp));
                 System.out.println("Estado actual " + estadoActual + " caracter "+ tmp + " transicion a "+estadoTemporal);
@@ -227,9 +245,35 @@ public class MenejadorAnalizador {
             }
             posicion++;
         }
-        System.out.println("*********Termino en el estado "+ getEstadoAceptacion(estadoActual) + " token actual : "+token);
-        // verificar el estado de aceptación
-
-    }
-    
+        if(token!=("")){
+            System.out.println("*********Termino en el estado "+ getEstadoAceptacion(estadoActual) + " token actual : "+token);
+        } 
+        
+        if(esEspacio==true&&token.equals("")){
+            //No guardamos los datos y reinicamos la variable
+            filaTemporal++;
+            columna=0;
+            esEspacio=false;
+        } else if(token.equals("")){
+            columna++;
+        } else {
+            if(filaTemporal!=fila){
+                columnaTemporal=columna-token.length();
+                error.verificarError(getEstadoAceptacion(estadoActual), token, (filaTemporal+1),columnaTemporal+1);
+                filaTemporal++;
+                columna=0;
+                esEspacio=false;
+            } else {
+                if(filaTemporal==0){
+                    columnaTemporal=columna-token.length();
+                    error.verificarError(getEstadoAceptacion(estadoActual), token, 1,columnaTemporal+1);
+                    columna++;
+                } else{
+                    columnaTemporal=columna-token.length();
+                    error.verificarError(getEstadoAceptacion(estadoActual), token, (filaTemporal+1),columnaTemporal+1);
+                    columna++;
+                }
+            }
+        }
+    }   
 }
