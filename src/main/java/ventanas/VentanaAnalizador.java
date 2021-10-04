@@ -14,8 +14,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import manejadores.ManejadorTablaError;
+import manejadores.ManejadorTablaRecuento;
+import manejadores.ManejadorTablaToken;
 import manejadores.MenejadorAnalizador;
 import tokens.NumeroLinea;
+import tokens.Token;
 
 /**
  *
@@ -59,6 +62,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         analizarToken = new javax.swing.JButton();
         reporteToken = new javax.swing.JButton();
         salir = new javax.swing.JButton();
+        guardarCambios1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -89,7 +93,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
                 guardarCambiosKeyPressed(evt);
             }
         });
-        getContentPane().add(guardarCambios, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 600, 180, 90));
+        getContentPane().add(guardarCambios, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 600, 180, 90));
 
         reporteErrores.setBackground(new java.awt.Color(0, 153, 153));
         reporteErrores.setFont(new java.awt.Font("Ubuntu", 3, 18)); // NOI18N
@@ -143,6 +147,11 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         reporteToken.setFont(new java.awt.Font("Ubuntu", 3, 18)); // NOI18N
         reporteToken.setForeground(new java.awt.Color(0, 0, 0));
         reporteToken.setText("Reporte Tokens");
+        reporteToken.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reporteTokenActionPerformed(evt);
+            }
+        });
         reporteToken.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 reporteTokenKeyPressed(evt);
@@ -165,6 +174,22 @@ public class VentanaAnalizador extends javax.swing.JFrame {
             }
         });
         getContentPane().add(salir, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 600, 170, 90));
+
+        guardarCambios1.setBackground(new java.awt.Color(0, 153, 153));
+        guardarCambios1.setFont(new java.awt.Font("Ubuntu", 3, 18)); // NOI18N
+        guardarCambios1.setForeground(new java.awt.Color(0, 0, 0));
+        guardarCambios1.setText("Recuento Lexemas");
+        guardarCambios1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                guardarCambios1ActionPerformed(evt);
+            }
+        });
+        guardarCambios1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                guardarCambios1KeyPressed(evt);
+            }
+        });
+        getContentPane().add(guardarCambios1, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 590, -1, 90));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/FondoGranja.jpg"))); // NOI18N
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 930, 710));
@@ -258,6 +283,8 @@ public class VentanaAnalizador extends javax.swing.JFrame {
     private void analizarTokenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analizarTokenActionPerformed
         MenejadorAnalizador manejadorSecundario= new  MenejadorAnalizador();
         manejadores.MenejadorAnalizador.errores.clear();
+        manejadores.MenejadorAnalizador.token.clear();
+        manejadores.MenejadorAnalizador.recuentoLexema.clear();
         manejadorSecundario.analizarTokens(jTextArea1);
         reporteErrores.setEnabled(true);
         reporteToken.setEnabled(true);
@@ -271,11 +298,34 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_reporteErroresActionPerformed
 
+    private void reporteTokenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reporteTokenActionPerformed
+        VentanaTablaToken ventana = new VentanaTablaToken();
+        ManejadorTablaToken manejadorToken= new ManejadorTablaToken();
+        manejadorToken.llenarTabla(ventana);
+        ventana.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_reporteTokenActionPerformed
+
+    private void guardarCambios1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_guardarCambios1KeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_guardarCambios1KeyPressed
+
+    private void guardarCambios1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarCambios1ActionPerformed
+        Token token= new Token();
+        token.recuentoLexema();
+        VentanaTablaRecuentoLexemas ventana = new VentanaTablaRecuentoLexemas();
+        ManejadorTablaRecuento manejadorTablaRecuento= new ManejadorTablaRecuento();
+        manejadorTablaRecuento.llenarTabla(ventana);
+        ventana.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_guardarCambios1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton analizarToken;
     private javax.swing.JButton buscarPatrones;
     private javax.swing.JButton guardarCambios;
+    private javax.swing.JButton guardarCambios1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;

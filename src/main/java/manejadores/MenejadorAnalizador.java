@@ -13,6 +13,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import tokens.Errores;
+import tokens.Token;
 
 
 /**
@@ -22,8 +23,11 @@ import tokens.Errores;
 public class MenejadorAnalizador {
         int columnaTemporal=0;
         Errores error = new Errores();
+        Token agregarToken = new Token();
         int filaTemporal=0;
         public static ArrayList<Errores> errores = new ArrayList<>();
+        public static ArrayList<Token> token = new ArrayList<>();
+        public static ArrayList<Token> recuentoLexema = new ArrayList<>();
         String palabra;
         int posicion = 0;
         int estadosFinalizacion[] = new int[4];
@@ -209,7 +213,7 @@ public class MenejadorAnalizador {
 
         return res;
     }
-
+    
     public void getToken() {
         estadoActual = 0;
         boolean esEspacio=false;
@@ -259,6 +263,7 @@ public class MenejadorAnalizador {
             if(filaTemporal!=fila){
                 columnaTemporal=columna-token.length();
                 error.verificarError(getEstadoAceptacion(estadoActual), token, (filaTemporal+1),columnaTemporal+1);
+                agregarToken.verificarToken(getEstadoAceptacion(estadoActual), token, (filaTemporal+1), columnaTemporal+1);
                 filaTemporal++;
                 columna=0;
                 esEspacio=false;
@@ -266,10 +271,12 @@ public class MenejadorAnalizador {
                 if(filaTemporal==0){
                     columnaTemporal=columna-token.length();
                     error.verificarError(getEstadoAceptacion(estadoActual), token, 1,columnaTemporal+1);
+                    agregarToken.verificarToken(getEstadoAceptacion(estadoActual), token, 1, columnaTemporal+1);
                     columna++;
                 } else{
                     columnaTemporal=columna-token.length();
                     error.verificarError(getEstadoAceptacion(estadoActual), token, (filaTemporal+1),columnaTemporal+1);
+                    agregarToken.verificarToken(getEstadoAceptacion(estadoActual), token, (filaTemporal+1), columnaTemporal+1);
                     columna++;
                 }
             }
