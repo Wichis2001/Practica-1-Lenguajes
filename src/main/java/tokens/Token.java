@@ -103,11 +103,6 @@ public class Token {
                 }
             } 
         }
-        
-        
-        
-        System.err.print(MenejadorAnalizador.recuentoLexema.size());
-        System.err.print("exuti");
             
     }
     

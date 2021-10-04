@@ -66,29 +66,29 @@ public class MenejadorAnalizador {
             matrizTransicion[2][1]= 2; //Permanecemos en el estado dos, ya que hay nuevamente un digito
             matrizTransicion[2][2]= 3; //Nos dirigimos al estado tres, ya que hay un signo de puntuacion para poder construir un decimal
             matrizTransicion[2][3]= -1; //Error, ya que no se esperaba un signo de agrupacion
-            matrizTransicion[2][3]= -1; //Error, ya que no se esperaba un signo de puntuación
-            matrizTransicion[2][3]= -1; //Error, ya que no se esperaba un operador aritmetico
+            matrizTransicion[2][4]= -1; //Error, ya que no se esperaba un signo de puntuación
+            matrizTransicion[2][5]= -1; //Error, ya que no se esperaba un operador aritmetico
             
             matrizTransicion[3][0]= -1; //Error, ya que no se esperaba una letra
             matrizTransicion[3][1]= 5; //Nos dirigmos al estado 5, ya que corroboramos que pudimos culminar nuestro número decimal
             matrizTransicion[3][2]= -1; //Error, ya que no esperaba un punto
             matrizTransicion[3][3]= -1; //Error, ya que no se esperaba un signo de agrupacion
-            matrizTransicion[3][3]= -1; //Error, ya que no se esperaba un signo de puntuación
-            matrizTransicion[3][3]= -1; //Error, ya que no se esperaba un operador aritmetico
+            matrizTransicion[3][4]= -1; //Error, ya que no se esperaba un signo de puntuación
+            matrizTransicion[3][5]= -1; //Error, ya que no se esperaba un operador aritmetico
             
             matrizTransicion[4][0]= -1; //Error, ya que no se esperaba una letra
             matrizTransicion[4][1]= -1; //Error, ya que no esperaba un digito
             matrizTransicion[4][2]= -1; //Error, ya que no esperaba un punto
             matrizTransicion[4][3]= -1; //Error, ya que no se esperaba un signo de agrupacion
-            matrizTransicion[4][3]= -1; //Error, ya que no se esperaba un signo de puntuación
-            matrizTransicion[4][3]= -1; //Error, ya que no se esperaba un operador aritmetico
+            matrizTransicion[4][4]= -1; //Error, ya que no se esperaba un signo de puntuación
+            matrizTransicion[4][5]= -1; //Error, ya que no se esperaba un operador aritmetico
             
             matrizTransicion[5][0]= -1; //Error, ya que no se esperaba una letra
             matrizTransicion[5][1]= 5;  //Permanecemos en el estado 5, ya que tenemos nuevamente un digito
             matrizTransicion[5][2]= -1; //Error, ya que no esperaba un punto
             matrizTransicion[5][3]= -1; //Error, ya que no se esperaba un signo de agrupacion
-            matrizTransicion[5][3]= -1; //Error, ya que no se esperaba un signo de puntuación
-            matrizTransicion[5][3]= -1; //Error, ya que no se esperaba un operador aritmetico
+            matrizTransicion[5][4]= -1; //Error, ya que no se esperaba un signo de puntuación
+            matrizTransicion[5][5]= -1; //Error, ya que no se esperaba un operador aritmetico
             
             //Tenemos un identificador
             estadosFinalizacion[0]=1;
@@ -183,20 +183,19 @@ public class MenejadorAnalizador {
     //alfabeto
     public int getIntCaracter(char caracter) {
         int resultado = -1;
-        if(caracter == '.'){
-            resultado = 4;
-        } else if ((caracter == 'ñ')||(caracter == 'Ñ')){
+            if ((caracter == 'ñ')||(caracter == 'Ñ')){
             resultado = -1;       
         } else if (Character.isDigit(caracter)) {
             resultado = 1;
-        } else if (caracter == '.'){
-            resultado = 2;
-            if (Character.isDigit(caracter)){
-                resultado = 5;
-            }    
-        } else if (Character.isLetter(caracter)){
+                if (caracter == '.'){
+                    resultado = 2;
+                if (Character.isDigit(caracter)){
+                    resultado = 5;
+                }    
+                }
+        }  else if (Character.isLetter(caracter)){
             resultado= 0;
-        } else if ((caracter == '(') || (caracter == ')') || (caracter == '[') || (caracter == ']') || (caracter == '{') || (caracter == '}') || (caracter == '.') || (caracter == ',') || (caracter == ':') || (caracter == ';') || (caracter == '+') || (caracter == '-') || (caracter == '*') || (caracter == '/') || (caracter == '%')) {
+        }  else if ((caracter == '(') || (caracter == ')') || (caracter == '[') || (caracter == ']') || (caracter == '{') || (caracter == '}') || (caracter == '.') || (caracter == ',') || (caracter == ':') || (caracter == ';') || (caracter == '+') || (caracter == '-') || (caracter == '*') || (caracter == '/') || (caracter == '%')) {
             resultado = 4;
         } 
                
@@ -247,8 +246,13 @@ public class MenejadorAnalizador {
                 generacionAFD.add("Estado actual " + estadoActual + " caracter "+ tmp + " transicion a "+estadoTemporal);
                 token+=tmp;
                 estadoActual = estadoTemporal;
-
                 System.out.println(tmp);
+                if((posicion+1) < palabra.length()){
+                    if(estadoActual==-1&&palabra.charAt(posicion+1) != ' '){
+                        posicion++;
+                        this.verificarErrores();
+                    } 
+                }         
             }
             posicion++;
         }
@@ -300,8 +304,54 @@ public class MenejadorAnalizador {
             CargaDatos.ventana.getReporteTokens().setVisible(false);
             CargaDatos.ventana.getRecuentoLexemas().setVisible(false);
             CargaDatos.ventana.getReporteErrores().setVisible(true);
-             CargaDatos.ventana.getRecuperacionErrores().setVisible(true);
+            CargaDatos.ventana.getRecuperacionErrores().setVisible(true);
             CargaDatos.ventana.getAFD().setEnabled(true);
         }
     }
+    
+    public void verificarErrores(){
+        estadoActual = 0;
+        boolean esEspacio=false;
+        boolean seguirLeyendo = true;
+        char tmp;
+        String token = "";
+
+        while ((seguirLeyendo) && (posicion < palabra.length())) {
+            columna++;
+            if ((Character.isSpaceChar(tmp = palabra.charAt(posicion)))||(palabra.charAt(posicion)) == '\n') {
+                if((palabra.charAt(posicion)) == '\n'){
+                    fila= fila+1;
+                    columna--;
+                    esEspacio=true;
+                } else if (Character.isSpaceChar(tmp = palabra.charAt(posicion))){
+                    columna--;            
+                }   
+                seguirLeyendo = false;  
+            } else {
+                if(palabra.charAt(posicion) == ' '){
+                    esEspacio=true;
+                    seguirLeyendo=false;
+                }
+                // para mi automata
+                int estadoTemporal = getSiguienteEstado(estadoActual, getIntCaracter(tmp));
+                System.out.println("Estado actual " + estadoActual + " caracter "+ tmp + " transicion a "+estadoTemporal);
+                token+=tmp;
+                estadoActual = estadoTemporal;
+                System.out.println(tmp);
+                if((posicion+1) < palabra.length()){
+                    if(estadoActual==-1){
+                        if(palabra.charAt(posicion+1) != ' '){
+                            posicion++;
+                            this.verificarErrores();
+                        }                       
+                    }
+                } 
+            }                
+            posicion++;
+        }
+        if(token!=("")){
+            System.out.println("*********Termino en el estado "+ getEstadoAceptacion(estadoActual) + " token actual : "+token);
+            System.out.println("\n");
+        }      
+    }   
 }
