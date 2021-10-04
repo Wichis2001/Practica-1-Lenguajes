@@ -183,16 +183,11 @@ public class MenejadorAnalizador {
     //alfabeto
     public int getIntCaracter(char caracter) {
         int resultado = -1;
-            if ((caracter == 'ñ')||(caracter == 'Ñ')){
+        if ((caracter == 'ñ')||(caracter == 'Ñ')){
             resultado = -1;       
         } else if (Character.isDigit(caracter)) {
             resultado = 1;
-                if (caracter == '.'){
-                    resultado = 2;
-                if (Character.isDigit(caracter)){
-                    resultado = 5;
-                }    
-                }
+           
         }  else if (Character.isLetter(caracter)){
             resultado= 0;
         }  else if ((caracter == '(') || (caracter == ')') || (caracter == '[') || (caracter == ']') || (caracter == '{') || (caracter == '}') || (caracter == '.') || (caracter == ',') || (caracter == ':') || (caracter == ';') || (caracter == '+') || (caracter == '-') || (caracter == '*') || (caracter == '/') || (caracter == '%')) {
@@ -237,23 +232,33 @@ public class MenejadorAnalizador {
                         
                 seguirLeyendo = false;  
             } else {
+                
+                
                 if(palabra.charAt(posicion) == ' '){
                     esEspacio=true;
                     seguirLeyendo=false;
                 }
                 // para mi automata
-                int estadoTemporal = getSiguienteEstado(estadoActual, getIntCaracter(tmp));
-                generacionAFD.add("Estado actual " + estadoActual + " caracter "+ tmp + " transicion a "+estadoTemporal);
-                token+=tmp;
-                estadoActual = estadoTemporal;
-                System.out.println(tmp);
+                if(estadoActual==2&&palabra.charAt(posicion) == '.'){
+                    int estadoTemporal = 3;
+                    generacionAFD.add("Estado actual " + estadoActual + " caracter "+ tmp + " transicion a "+estadoTemporal);
+                    token+=tmp;
+                    estadoActual = estadoTemporal;
+                } else {
+                    int estadoTemporal = getSiguienteEstado(estadoActual, getIntCaracter(tmp));
+                    generacionAFD.add("Estado actual " + estadoActual + " caracter "+ tmp + " transicion a "+estadoTemporal);
+                    token+=tmp;
+                    estadoActual = estadoTemporal;
+                }
+                generacionAFD.add(String.valueOf(tmp));
                 if((posicion+1) < palabra.length()){
                     if(estadoActual==-1&&palabra.charAt(posicion+1) != ' '){
-                        posicion++;
                         this.verificarErrores();
+                        estadoActual=-1;
                     } 
-                }         
+                } 
             }
+            
             posicion++;
         }
         if(token!=("")){
@@ -310,7 +315,7 @@ public class MenejadorAnalizador {
     }
     
     public void verificarErrores(){
-        estadoActual = 0;
+        int estadoActual2 = 0;
         boolean esEspacio=false;
         boolean seguirLeyendo = true;
         char tmp;
@@ -333,16 +338,25 @@ public class MenejadorAnalizador {
                     seguirLeyendo=false;
                 }
                 // para mi automata
-                int estadoTemporal = getSiguienteEstado(estadoActual, getIntCaracter(tmp));
-                System.out.println("Estado actual " + estadoActual + " caracter "+ tmp + " transicion a "+estadoTemporal);
-                token+=tmp;
-                estadoActual = estadoTemporal;
+                if(estadoActual2==2&&palabra.charAt(posicion) == '.'){
+                    int estadoTemporal = 3;
+                    System.out.println("Estado actual " + estadoActual2 + " caracter "+ tmp + " transicion a "+estadoTemporal);
+                    token+=tmp;
+                    estadoActual2 = estadoTemporal;
+                } else {
+                    int estadoTemporal = getSiguienteEstado(estadoActual2, getIntCaracter(tmp));
+                    System.out.println("Estado actual " + estadoActual2 + " caracter "+ tmp + " transicion a "+estadoTemporal);
+                    token+=tmp;
+                    estadoActual2 = estadoTemporal;
+                }
                 System.out.println(tmp);
                 if((posicion+1) < palabra.length()){
-                    if(estadoActual==-1){
+                    if(estadoActual2==-1){
+                        posicion++;
                         if(palabra.charAt(posicion+1) != ' '){
-                            posicion++;
+                            estadoActual2=0;
                             this.verificarErrores();
+                            
                         }                       
                     }
                 } 
@@ -350,7 +364,7 @@ public class MenejadorAnalizador {
             posicion++;
         }
         if(token!=("")){
-            System.out.println("*********Termino en el estado "+ getEstadoAceptacion(estadoActual) + " token actual : "+token);
+            System.out.println("*********Termino en el estado "+ getEstadoAceptacion(estadoActual2) + " token actual : "+token);
             System.out.println("\n");
         }      
     }   
