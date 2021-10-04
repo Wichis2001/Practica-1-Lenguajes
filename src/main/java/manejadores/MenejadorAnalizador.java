@@ -26,6 +26,7 @@ public class MenejadorAnalizador {
         Errores error = new Errores();
         Token agregarToken = new Token();
         int filaTemporal=0;
+        int espacioExtra;
         public static ArrayList<Errores> errores = new ArrayList<>();
         public static ArrayList<Token> token = new ArrayList<>();
         public static ArrayList<Token> recuentoLexema = new ArrayList<>();
@@ -256,7 +257,7 @@ public class MenejadorAnalizador {
                     if(estadoActual==-1&&palabra.charAt(posicion+1) != ' '&&palabra.charAt(posicion+1) != '\n'){
                         this.verificarErrores();
                         estadoActual=-1;
-                        posicion=posicion-2;
+                        posicion=espacioExtra-1;
                         seguirLeyendo=false;
                     } 
                 } 
@@ -318,30 +319,31 @@ public class MenejadorAnalizador {
     }
     
     public void verificarErrores(){
+        espacioExtra=posicion+1;
         int estadoActual2 = 0;
         boolean esEspacio=false;
         boolean seguirLeyendo = true;
         char tmp;
         String token = "";
 
-        while ((seguirLeyendo) && (posicion < palabra.length())) {
+        while ((seguirLeyendo) && (espacioExtra < palabra.length())) {
             columna++;
-            if ((Character.isSpaceChar(tmp = palabra.charAt(posicion)))||(palabra.charAt(posicion)) == '\n') {
-                if((palabra.charAt(posicion)) == '\n'){
+            if ((Character.isSpaceChar(tmp = palabra.charAt(espacioExtra)))||(palabra.charAt(espacioExtra)) == '\n') {
+                if((palabra.charAt(espacioExtra)) == '\n'){
                     fila= fila+1;
                     columna--;
                     esEspacio=true;
-                } else if (Character.isSpaceChar(tmp = palabra.charAt(posicion))){
+                } else if (Character.isSpaceChar(tmp = palabra.charAt(espacioExtra))){
                     columna--;            
                 }   
                 seguirLeyendo = false;  
             } else {
-                if(palabra.charAt(posicion) == ' '){
+                if(palabra.charAt(espacioExtra) == ' '){
                     esEspacio=true;
                     seguirLeyendo=false;
                 }
                 // para mi automata
-                if(estadoActual2==2&&palabra.charAt(posicion) == '.'){
+                if(estadoActual2==2&&palabra.charAt(espacioExtra) == '.'){
                     int estadoTemporal = 3;
                     System.out.println("Estado actual " + estadoActual2 + " caracter "+ tmp + " transicion a "+estadoTemporal);
                     token+=tmp;
@@ -353,17 +355,17 @@ public class MenejadorAnalizador {
                     estadoActual2 = estadoTemporal;
                 }
                 System.out.println(tmp);
-                if((posicion+1) < palabra.length()){
-                    if(estadoActual2==-1&&palabra.charAt(posicion+1) != ' '&&palabra.charAt(posicion+1) != '\n'){
+                if((espacioExtra+1) < palabra.length()){
+                    if(estadoActual2==-1&&palabra.charAt(espacioExtra+1) != ' '&&palabra.charAt(espacioExtra+1) != '\n'){
                         estadoActual2=0;
                         token="";
+//                        espacioExtra++;
                     } else if(estadoActual2==-1){
                         seguirLeyendo=false;
-                    } 
-                    
+                    }    
                 }
             }
-            posicion++;
+            espacioExtra++;
         }
         if(token!=("")){
             System.out.println("*********Termino en el estado "+ getEstadoAceptacion(estadoActual2) + " token actual : "+token);
