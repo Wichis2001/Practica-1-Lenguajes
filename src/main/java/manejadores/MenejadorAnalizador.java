@@ -12,6 +12,7 @@ import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
+import jdk.internal.joptsimple.internal.Strings;
 import tokens.Errores;
 import tokens.Token;
 
@@ -252,9 +253,11 @@ public class MenejadorAnalizador {
                 }
                 generacionAFD.add(String.valueOf(tmp));
                 if((posicion+1) < palabra.length()){
-                    if(estadoActual==-1&&palabra.charAt(posicion+1) != ' '){
+                    if(estadoActual==-1&&palabra.charAt(posicion+1) != ' '&&palabra.charAt(posicion+1) != '\n'){
                         this.verificarErrores();
                         estadoActual=-1;
+                        posicion=posicion-2;
+                        seguirLeyendo=false;
                     } 
                 } 
             }
@@ -351,16 +354,15 @@ public class MenejadorAnalizador {
                 }
                 System.out.println(tmp);
                 if((posicion+1) < palabra.length()){
-                    if(estadoActual2==-1){
-                        posicion++;
-                        if(palabra.charAt(posicion+1) != ' '){
-                            estadoActual2=0;
-                            this.verificarErrores();
-                            
-                        }                       
-                    }
-                } 
-            }                
+                    if(estadoActual2==-1&&palabra.charAt(posicion+1) != ' '&&palabra.charAt(posicion+1) != '\n'){
+                        estadoActual2=0;
+                        token="";
+                    } else if(estadoActual2==-1){
+                        seguirLeyendo=false;
+                    } 
+                    
+                }
+            }
             posicion++;
         }
         if(token!=("")){
