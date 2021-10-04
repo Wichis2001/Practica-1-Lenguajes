@@ -5,8 +5,10 @@
  */
 package ventanas;
 import datos.CargaDatos;
+import datos.GuardarDatos;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -88,6 +90,11 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         guardarCambios.setFont(new java.awt.Font("Ubuntu", 3, 18)); // NOI18N
         guardarCambios.setForeground(new java.awt.Color(0, 0, 0));
         guardarCambios.setText("Guardar Cambios");
+        guardarCambios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                guardarCambiosActionPerformed(evt);
+            }
+        });
         guardarCambios.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 guardarCambiosKeyPressed(evt);
@@ -319,6 +326,20 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         ventana.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_guardarCambios1ActionPerformed
+
+    private void guardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarCambiosActionPerformed
+        GuardarDatos guardar = new GuardarDatos();
+        int response = JOptionPane.showConfirmDialog(this,"¿Quieres Guardar los cambios en el archivo de Entrada?", "GUARDAR",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+        if (response==JOptionPane.YES_OPTION){
+            try {
+                //Salimos del programa
+                guardar.GuardaraArchivo(this.getArea().getText());
+            } catch (IOException ex) {
+                Logger.getLogger(VentanaAnalizador.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            JOptionPane.showMessageDialog(this, "Cambios guardados exitosamente :)");
+        }
+    }//GEN-LAST:event_guardarCambiosActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

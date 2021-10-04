@@ -21,7 +21,7 @@ import ventanas.ventanaCarga;
 public class CargaDatos {
     public static VentanaPatrones ventanaPatrones= new VentanaPatrones();
     public static VentanaAnalizador ventana = new VentanaAnalizador();
-    private File archivoAProcesar;
+    public static File archivoAProcesar;
     private ventanaCarga ventanaCarga;
 
     
