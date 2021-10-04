@@ -11,10 +11,12 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
+import manejadores.ManejadorAFD;
 import manejadores.ManejadorTablaError;
 import manejadores.ManejadorTablaRecuento;
 import manejadores.ManejadorTablaToken;
@@ -38,12 +40,35 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         numeroLinea=new NumeroLinea(jTextArea1);
         jScrollPane1.setRowHeaderView(numeroLinea);
         buscarPatrones.requestFocus();
-        reporteErrores.setEnabled(false);
-        reporteToken.setEnabled(false);
+        reporteErrores.setVisible(false);
+        recuentoLexema.setVisible(false);
+        afdOptimo.setEnabled(false);
+        recuperarErrores.setVisible(false);
+        reporteToken.setVisible(false);
     }
     
     public JTextArea getArea(){
         return this.jTextArea1;
+    }
+    
+    public JButton getReporteTokens(){
+        return this.reporteToken;
+    }
+    
+    public JButton getReporteErrores(){
+        return this.reporteErrores;
+    }
+    
+    public JButton getRecuentoLexemas(){
+        return this.recuentoLexema;
+    }
+    
+    public JButton getAFD(){
+        return this.afdOptimo;
+    }
+    
+    public JButton getRecuperacionErrores(){
+        return this.recuperarErrores;
     }
 
     /**
@@ -64,7 +89,9 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         analizarToken = new javax.swing.JButton();
         reporteToken = new javax.swing.JButton();
         salir = new javax.swing.JButton();
-        guardarCambios1 = new javax.swing.JButton();
+        recuentoLexema = new javax.swing.JButton();
+        afdOptimo = new javax.swing.JButton();
+        recuperarErrores = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -84,7 +111,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 210, 850, 370));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 210, 860, 370));
 
         guardarCambios.setBackground(new java.awt.Color(0, 153, 153));
         guardarCambios.setFont(new java.awt.Font("Ubuntu", 3, 18)); // NOI18N
@@ -100,7 +127,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
                 guardarCambiosKeyPressed(evt);
             }
         });
-        getContentPane().add(guardarCambios, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 600, 180, 90));
+        getContentPane().add(guardarCambios, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 590, 180, 90));
 
         reporteErrores.setBackground(new java.awt.Color(0, 153, 153));
         reporteErrores.setFont(new java.awt.Font("Ubuntu", 3, 18)); // NOI18N
@@ -116,7 +143,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
                 reporteErroresKeyPressed(evt);
             }
         });
-        getContentPane().add(reporteErrores, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 100, 170, 90));
+        getContentPane().add(reporteErrores, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 100, 170, 90));
 
         buscarPatrones.setBackground(new java.awt.Color(0, 153, 153));
         buscarPatrones.setFont(new java.awt.Font("Ubuntu", 3, 18)); // NOI18N
@@ -132,7 +159,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
                 buscarPatronesKeyPressed(evt);
             }
         });
-        getContentPane().add(buscarPatrones, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 100, 170, 90));
+        getContentPane().add(buscarPatrones, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 170, 90));
 
         analizarToken.setBackground(new java.awt.Color(0, 153, 153));
         analizarToken.setFont(new java.awt.Font("Ubuntu", 3, 18)); // NOI18N
@@ -148,7 +175,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
                 analizarTokenKeyPressed(evt);
             }
         });
-        getContentPane().add(analizarToken, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 100, 170, 90));
+        getContentPane().add(analizarToken, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 100, 170, 90));
 
         reporteToken.setBackground(new java.awt.Color(0, 153, 153));
         reporteToken.setFont(new java.awt.Font("Ubuntu", 3, 18)); // NOI18N
@@ -164,7 +191,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
                 reporteTokenKeyPressed(evt);
             }
         });
-        getContentPane().add(reporteToken, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 100, 170, 90));
+        getContentPane().add(reporteToken, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 100, 170, 90));
 
         salir.setBackground(new java.awt.Color(0, 153, 153));
         salir.setFont(new java.awt.Font("Ubuntu", 3, 18)); // NOI18N
@@ -180,26 +207,58 @@ public class VentanaAnalizador extends javax.swing.JFrame {
                 salirKeyPressed(evt);
             }
         });
-        getContentPane().add(salir, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 600, 170, 90));
+        getContentPane().add(salir, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 590, 170, 90));
 
-        guardarCambios1.setBackground(new java.awt.Color(0, 153, 153));
-        guardarCambios1.setFont(new java.awt.Font("Ubuntu", 3, 18)); // NOI18N
-        guardarCambios1.setForeground(new java.awt.Color(0, 0, 0));
-        guardarCambios1.setText("Recuento Lexemas");
-        guardarCambios1.addActionListener(new java.awt.event.ActionListener() {
+        recuentoLexema.setBackground(new java.awt.Color(0, 153, 153));
+        recuentoLexema.setFont(new java.awt.Font("Ubuntu", 3, 18)); // NOI18N
+        recuentoLexema.setForeground(new java.awt.Color(0, 0, 0));
+        recuentoLexema.setText("Recuento Lexemas");
+        recuentoLexema.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                guardarCambios1ActionPerformed(evt);
+                recuentoLexemaActionPerformed(evt);
             }
         });
-        guardarCambios1.addKeyListener(new java.awt.event.KeyAdapter() {
+        recuentoLexema.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                guardarCambios1KeyPressed(evt);
+                recuentoLexemaKeyPressed(evt);
             }
         });
-        getContentPane().add(guardarCambios1, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 590, -1, 90));
+        getContentPane().add(recuentoLexema, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 100, -1, 90));
+
+        afdOptimo.setBackground(new java.awt.Color(0, 153, 153));
+        afdOptimo.setFont(new java.awt.Font("Ubuntu", 3, 18)); // NOI18N
+        afdOptimo.setForeground(new java.awt.Color(0, 0, 0));
+        afdOptimo.setText("AFD OPTIMO");
+        afdOptimo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                afdOptimoActionPerformed(evt);
+            }
+        });
+        afdOptimo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                afdOptimoKeyPressed(evt);
+            }
+        });
+        getContentPane().add(afdOptimo, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 100, 170, 90));
+
+        recuperarErrores.setBackground(new java.awt.Color(0, 153, 153));
+        recuperarErrores.setFont(new java.awt.Font("Ubuntu", 3, 18)); // NOI18N
+        recuperarErrores.setForeground(new java.awt.Color(0, 0, 0));
+        recuperarErrores.setText("Recuperación Error");
+        recuperarErrores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                recuperarErroresActionPerformed(evt);
+            }
+        });
+        recuperarErrores.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                recuperarErroresKeyPressed(evt);
+            }
+        });
+        getContentPane().add(recuperarErrores, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 100, -1, 90));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/FondoGranja.jpg"))); // NOI18N
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 930, 710));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1010, 710));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -292,9 +351,10 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         manejadores.MenejadorAnalizador.errores.clear();
         manejadores.MenejadorAnalizador.token.clear();
         manejadores.MenejadorAnalizador.recuentoLexema.clear();
+        manejadores.MenejadorAnalizador.generacionAFD.clear();
+        manejadores.MenejadorAnalizador.recuperacionErrores.clear();
         manejadorSecundario.analizarTokens(jTextArea1);
-        reporteErrores.setEnabled(true);
-        reporteToken.setEnabled(true);
+        manejadorSecundario.verificarBotones();
     }//GEN-LAST:event_analizarTokenActionPerformed
 
     private void reporteErroresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reporteErroresActionPerformed
@@ -313,11 +373,11 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_reporteTokenActionPerformed
 
-    private void guardarCambios1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_guardarCambios1KeyPressed
+    private void recuentoLexemaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_recuentoLexemaKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_guardarCambios1KeyPressed
+    }//GEN-LAST:event_recuentoLexemaKeyPressed
 
-    private void guardarCambios1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarCambios1ActionPerformed
+    private void recuentoLexemaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recuentoLexemaActionPerformed
         Token token= new Token();
         token.recuentoLexema();
         VentanaTablaRecuentoLexemas ventana = new VentanaTablaRecuentoLexemas();
@@ -325,7 +385,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         manejadorTablaRecuento.llenarTabla(ventana);
         ventana.setVisible(true);
         this.setVisible(false);
-    }//GEN-LAST:event_guardarCambios1ActionPerformed
+    }//GEN-LAST:event_recuentoLexemaActionPerformed
 
     private void guardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarCambiosActionPerformed
         GuardarDatos guardar = new GuardarDatos();
@@ -341,16 +401,38 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_guardarCambiosActionPerformed
 
+    private void afdOptimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_afdOptimoActionPerformed
+        VentanaAFDOptimo ventana = new VentanaAFDOptimo();
+        ManejadorAFD manejador= new ManejadorAFD();
+        manejador.llenarTextArea(ventana);
+        ventana.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_afdOptimoActionPerformed
+
+    private void afdOptimoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_afdOptimoKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_afdOptimoKeyPressed
+
+    private void recuperarErroresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recuperarErroresActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_recuperarErroresActionPerformed
+
+    private void recuperarErroresKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_recuperarErroresKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_recuperarErroresKeyPressed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton afdOptimo;
     private javax.swing.JButton analizarToken;
     private javax.swing.JButton buscarPatrones;
     private javax.swing.JButton guardarCambios;
-    private javax.swing.JButton guardarCambios1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JButton recuentoLexema;
+    private javax.swing.JButton recuperarErrores;
     private javax.swing.JButton reporteErrores;
     private javax.swing.JButton reporteToken;
     private javax.swing.JButton salir;

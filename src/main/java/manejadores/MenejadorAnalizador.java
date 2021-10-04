@@ -28,6 +28,8 @@ public class MenejadorAnalizador {
         public static ArrayList<Errores> errores = new ArrayList<>();
         public static ArrayList<Token> token = new ArrayList<>();
         public static ArrayList<Token> recuentoLexema = new ArrayList<>();
+        public static ArrayList<String> generacionAFD = new ArrayList<>();
+        public static ArrayList<String> recuperacionErrores = new ArrayList<>();
         String palabra;
         int posicion = 0;
         int estadosFinalizacion[] = new int[4];
@@ -181,7 +183,9 @@ public class MenejadorAnalizador {
     //alfabeto
     public int getIntCaracter(char caracter) {
         int resultado = -1;
-        if ((caracter == 'ñ')||(caracter == 'Ñ')){
+        if(caracter == '.'){
+            resultado = 4;
+        } else if ((caracter == 'ñ')||(caracter == 'Ñ')){
             resultado = -1;       
         } else if (Character.isDigit(caracter)) {
             resultado = 1;
@@ -240,7 +244,7 @@ public class MenejadorAnalizador {
                 }
                 // para mi automata
                 int estadoTemporal = getSiguienteEstado(estadoActual, getIntCaracter(tmp));
-                System.out.println("Estado actual " + estadoActual + " caracter "+ tmp + " transicion a "+estadoTemporal);
+                generacionAFD.add("Estado actual " + estadoActual + " caracter "+ tmp + " transicion a "+estadoTemporal);
                 token+=tmp;
                 estadoActual = estadoTemporal;
 
@@ -249,7 +253,8 @@ public class MenejadorAnalizador {
             posicion++;
         }
         if(token!=("")){
-            System.out.println("*********Termino en el estado "+ getEstadoAceptacion(estadoActual) + " token actual : "+token);
+            generacionAFD.add("*********Termino en el estado "+ getEstadoAceptacion(estadoActual) + " token actual : "+token);
+            generacionAFD.add("\n");
         } 
         
         if(esEspacio==true&&token.equals("")){
@@ -281,5 +286,22 @@ public class MenejadorAnalizador {
                 }
             }
         }
+        
     }   
+    
+    public void verificarBotones(){
+        if(errores.isEmpty()){
+            CargaDatos.ventana.getReporteTokens().setVisible(true);
+            CargaDatos.ventana.getRecuentoLexemas().setVisible(true);
+            CargaDatos.ventana.getReporteErrores().setVisible(false);
+            CargaDatos.ventana.getRecuperacionErrores().setVisible(false);
+            CargaDatos.ventana.getAFD().setEnabled(true);
+        } else{
+            CargaDatos.ventana.getReporteTokens().setVisible(false);
+            CargaDatos.ventana.getRecuentoLexemas().setVisible(false);
+            CargaDatos.ventana.getReporteErrores().setVisible(true);
+             CargaDatos.ventana.getRecuperacionErrores().setVisible(true);
+            CargaDatos.ventana.getAFD().setEnabled(true);
+        }
+    }
 }
