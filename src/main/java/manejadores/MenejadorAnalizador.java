@@ -22,6 +22,7 @@ import tokens.Token;
  * @author luis
  */
 public class MenejadorAnalizador {
+        int columnaError=0;
         int columnaTemporal=0;
         Errores error = new Errores();
         Token agregarToken = new Token();
@@ -299,7 +300,8 @@ public class MenejadorAnalizador {
                 }
             }
         }
-        
+        columna=columna+columnaError;
+        columnaError=0;
     }   
     
     public void verificarBotones(){
@@ -327,14 +329,14 @@ public class MenejadorAnalizador {
         String token = "";
 
         while ((seguirLeyendo) && (espacioExtra < palabra.length())) {
-            columna++;
+            columnaError++;
             if ((Character.isSpaceChar(tmp = palabra.charAt(espacioExtra)))||(palabra.charAt(espacioExtra)) == '\n') {
                 if((palabra.charAt(espacioExtra)) == '\n'){
                     fila= fila+1;
-                    columna--;
+                    columnaError--;
                     esEspacio=true;
                 } else if (Character.isSpaceChar(tmp = palabra.charAt(espacioExtra))){
-                    columna--;            
+                    columnaError--;            
                 }   
                 seguirLeyendo = false;  
             } else {
@@ -359,7 +361,6 @@ public class MenejadorAnalizador {
                     if(estadoActual2==-1&&palabra.charAt(espacioExtra+1) != ' '&&palabra.charAt(espacioExtra+1) != '\n'){
                         estadoActual2=0;
                         token="";
-//                        espacioExtra++;
                     } else if(estadoActual2==-1){
                         seguirLeyendo=false;
                     }    
@@ -370,6 +371,8 @@ public class MenejadorAnalizador {
         if(token!=("")){
             System.out.println("*********Termino en el estado "+ getEstadoAceptacion(estadoActual2) + " token actual : "+token);
             System.out.println("\n");
-        }      
+        } 
+        
+        
     }   
 }
