@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import manejadores.ManejadorAFD;
+import manejadores.ManejadorRecuperacionErrores;
 import manejadores.ManejadorTablaError;
 import manejadores.ManejadorTablaRecuento;
 import manejadores.ManejadorTablaToken;
@@ -414,7 +415,11 @@ public class VentanaAnalizador extends javax.swing.JFrame {
     }//GEN-LAST:event_afdOptimoKeyPressed
 
     private void recuperarErroresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recuperarErroresActionPerformed
-        // TODO add your handling code here:
+        VentanaRecuperacionErrores ventana = new VentanaRecuperacionErrores();
+        ManejadorRecuperacionErrores manejador= new ManejadorRecuperacionErrores();
+        manejador.llenarTextArea(ventana);
+        ventana.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_recuperarErroresActionPerformed
 
     private void recuperarErroresKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_recuperarErroresKeyPressed
