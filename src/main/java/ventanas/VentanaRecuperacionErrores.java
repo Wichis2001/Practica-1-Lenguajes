@@ -12,7 +12,7 @@ import manejadores.MenejadorAnalizador;
 import tokens.NumeroLinea;
 
 /**
- *
+ * Esta ventana me devuelva la ventana recuperacion de errores establecida por mi automata
  * @author luis
  */
 public class VentanaRecuperacionErrores extends javax.swing.JFrame {
@@ -27,6 +27,10 @@ public class VentanaRecuperacionErrores extends javax.swing.JFrame {
         this.jTextArea1.setEditable(false);
     }
     
+    /**
+     * Este metodo me devuelve el JTextArea que esta establecida en esta ventana
+     * @return
+     */
     public JTextArea getTextArea(){
         return this.jTextArea1;
     }

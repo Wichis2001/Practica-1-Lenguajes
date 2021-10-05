@@ -11,7 +11,7 @@ import manejadores.MenejadorAnalizador;
 import tokens.NumeroLinea;
 
 /**
- *
+ * Esta ventana me devuelve una tabla que contendra el cucuento de lexemas establecidos por nuestro analizador
  * @author luis
  */
 public class VentanaTablaRecuentoLexemas extends javax.swing.JFrame {
@@ -26,6 +26,10 @@ public class VentanaTablaRecuentoLexemas extends javax.swing.JFrame {
         this.tabla.setEnabled(false);
     }
     
+    /**
+     * Este metodo me devuelve la tabla que esta establecida en esta ventana
+     * @return
+     */
     public JTable getTable(){
         return this.tabla;
     }

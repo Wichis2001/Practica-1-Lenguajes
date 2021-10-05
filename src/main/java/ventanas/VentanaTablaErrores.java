@@ -12,7 +12,7 @@ import manejadores.MenejadorAnalizador;
 import tokens.NumeroLinea;
 
 /**
- *
+ * Esta ventana me permite mostrar los errores obtenidos al momento de analizar mi token
  * @author luis
  */
 public class VentanaTablaErrores extends javax.swing.JFrame {
@@ -27,6 +27,10 @@ public class VentanaTablaErrores extends javax.swing.JFrame {
         this.tabla.setEnabled(false);
     }
     
+    /**
+     * Este metodo me devuelve la tabla que esta establecida en esta ventana
+     * @return
+     */
     public JTable getTable(){
         return this.tabla;
     }

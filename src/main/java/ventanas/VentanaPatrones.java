@@ -11,7 +11,7 @@ import manejadores.MenejadorAnalizador;
 import tokens.NumeroLinea;
 
 /**
- *
+ * Esta ventana me permite mostar los patrones establecidos en mi automata, la cual me ayudara a hacer un resaltamiento de mi busqueda
  * @author luis
  */
 public class VentanaPatrones extends javax.swing.JFrame {
@@ -28,6 +28,10 @@ public class VentanaPatrones extends javax.swing.JFrame {
         this.getArea().setEditable(false);
     }
     
+    /**
+     * Este metodo me devuelve el JTextArea que esta establecida en esta ventana
+     * @return
+     */
     public JTextArea getArea(){
         return this.jTextArea1;
     }

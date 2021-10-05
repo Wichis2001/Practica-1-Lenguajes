@@ -6,7 +6,7 @@
 package tokens;
 
 /**
- *
+ * Esta clase me permite establecerle un número de linea a un JTextArea para poder determinar el lugar donde estamos
  * @author luis
  */
 import java.awt.*;
@@ -17,10 +17,25 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
+/**
+ * Esta clase me permite establecer los elementos necesarios para poder asociar este cambio de linia
+ * @author luis
+ */
 public class NumeroLinea extends JPanel implements CaretListener, DocumentListener, PropertyChangeListener {
 
+    /**
+     * Me permite establecer una variable estatica que estara asociada a la izquierda
+     */
     public final static float LEFT = 0.0f;
+
+    /**
+     * Me permite establecer una variable estatica que estara asociada al centro
+     */
     public final static float CENTER = 0.5f;
+
+    /**
+     * Me permite establecer una variable estatica que estara asociada ala derecha
+     */
     public final static float RIGHT = 1.0f;
     private Color color1 = new Color(7,86,100);
     private final static Border OUTER = new MatteBorder(0, 0, 0, 2,Color.BLACK);
@@ -42,12 +57,19 @@ public class NumeroLinea extends JPanel implements CaretListener, DocumentListen
 
     private HashMap<String, FontMetrics> fonts;
 
-    
+    /**
+     * Este constructor me permite asociar un nuevo numero de linea a travez de un JTextArea Asociado
+     * @param component
+     */
     public NumeroLinea(JTextComponent component) {
         this(component, 3);
     }
 
-    
+    /**
+     * Este constructor me permite establecer un nuevo número de linea a travez de un JTextArea y el minimo de digitos que peude haber en pantalla
+     * @param component
+     * @param minimumDisplayDigits
+     */
     public NumeroLinea(JTextComponent component, int minimumDisplayDigits) {
         this.component = component;
 
@@ -63,22 +85,34 @@ public class NumeroLinea extends JPanel implements CaretListener, DocumentListen
         component.addPropertyChangeListener("font", this);
     }
 
-    
+    /**
+     * Este metodo me devuelve una actualizacion de la fuente
+     * @return
+     */
     public boolean getUpdateFont() {
         return updateFont;
     }
 
-    
+    /**
+     * Este metodo me permite cambiar la actualizacion de la fuente
+     * @param updateFont
+     */
     public void setUpdateFont(boolean updateFont) {
         this.updateFont = updateFont;
     }
 
-    
+    /**
+     * Este metdo me devuelve el botde
+     * @return
+     */
     public int getBorderGap() {
         return borderGap;
     }
 
-    
+    /**
+     * Este metodo me permite cambiar el borde
+     * @param borderGap
+     */
     public void setBorderGap(int borderGap) {
         this.borderGap = borderGap;
         Border inner = new EmptyBorder(0, borderGap, 0, borderGap);
@@ -87,31 +121,51 @@ public class NumeroLinea extends JPanel implements CaretListener, DocumentListen
         setPreferredWidth();
     }
 
-   
+    /**
+     * Este metodo me devuelve el color que esta asociado a la linea de texto
+     * @return
+     */
     public Color getCurrentLineForeground() {
         return currentLineForeground == null ? getForeground() : currentLineForeground;
     }
 
-    
+    /**
+     * Este metodo me permite cambiar la linea de texto
+     * @param currentLineForeground
+     */
     public void setCurrentLineForeground(Color currentLineForeground) {
         this.currentLineForeground = currentLineForeground;
     }
 
-    
+    /**
+     * Este metodo me devuelve los alineamientos de los digitos
+     * @return
+     */
     public float getDigitAlignment() {
         return digitAlignment;
     }
+
+    /**
+     * Este metodo me permite cambiar los alineamientos de los digitos de mi texto de area
+     * @param digitAlignment
+     */
     public void setDigitAlignment(float digitAlignment) {
         this.digitAlignment
                 = digitAlignment > 1.0f ? 1.0f : digitAlignment < 0.0f ? -1.0f : digitAlignment;
     }
 
-   
+    /**
+     * Este metodo me devuelve el nomero minimo de digitos que se muestra en pantalla
+     * @return
+     */
     public int getMinimumDisplayDigits() {
         return minimumDisplayDigits;
     }
 
-   
+    /**
+     * Este metodo me permite cambiar el minimo de digitos que se muestra en pantalla
+     * @param minimumDisplayDigits
+     */
     public void setMinimumDisplayDigits(int minimumDisplayDigits) {
         this.minimumDisplayDigits = minimumDisplayDigits;
         setPreferredWidth();
@@ -137,6 +191,10 @@ public class NumeroLinea extends JPanel implements CaretListener, DocumentListen
         }
     }
 
+    /**
+     * Este metodo se encarga de pintar mi componente en el text area
+     * @param g
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -180,6 +238,11 @@ public class NumeroLinea extends JPanel implements CaretListener, DocumentListen
         }
     }
 
+    /**
+     * Este metodo me deuelve el numero de linea que esta asociado al text area
+     * @param rowStartOffset
+     * @return
+     */
     protected String getTextLineNumber(int rowStartOffset) {
         Element root = component.getDocument().getDefaultRootElement();
         int index = root.getElementIndex(rowStartOffset);
@@ -251,6 +314,11 @@ public class NumeroLinea extends JPanel implements CaretListener, DocumentListen
 //
 //  Implement CaretListener interface
 //
+
+    /**
+     * Este metodo me permite hacer una actualizacion de los datos
+     * @param e
+     */
     @Override
     public void caretUpdate(CaretEvent e) {
         //  Get the line the caret is positioned on
@@ -269,16 +337,29 @@ public class NumeroLinea extends JPanel implements CaretListener, DocumentListen
 //
 //  Implement DocumentListener interface
 //
+
+    /**
+     * Este metodo me permite hacer un cambio a mi actualizacion de datos
+     * @param e
+     */
     @Override
     public void changedUpdate(DocumentEvent e) {
         documentChanged();
     }
 
+    /**
+     * Este metodo me permite insertar una actualizacion a mi documento
+     * @param e
+     */
     @Override
     public void insertUpdate(DocumentEvent e) {
         documentChanged();
     }
 
+    /**
+     * Este metodo me permite remover una actualizacion de un documento
+     * @param e
+     */
     @Override
     public void removeUpdate(DocumentEvent e) {
         documentChanged();
@@ -310,6 +391,10 @@ public class NumeroLinea extends JPanel implements CaretListener, DocumentListen
         });
     }
 
+    /**
+     * Este metodo me permite alterar la propiedad que esta asociada a la fuente
+     * @param evt
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getNewValue() instanceof Font) {

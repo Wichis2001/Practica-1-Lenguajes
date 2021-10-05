@@ -11,7 +11,7 @@ import manejadores.MenejadorAnalizador;
 import tokens.NumeroLinea;
 
 /**
- *
+ * Esta ventana me permite establecer una nueva ventana de tabla de token para poder establer los tokenes establecidos
  * @author luis
  */
 public class VentanaTablaToken extends javax.swing.JFrame {
@@ -26,6 +26,10 @@ public class VentanaTablaToken extends javax.swing.JFrame {
         this.tabla.setEnabled(false);
     }
     
+    /**
+     * Este metodo me devuelve la tabla establecida en esta ventana
+     * @return
+     */
     public JTable getTable(){
         return this.tabla;
     }

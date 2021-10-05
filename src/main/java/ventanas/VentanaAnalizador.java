@@ -26,7 +26,7 @@ import tokens.NumeroLinea;
 import tokens.Token;
 
 /**
- *
+ * Esta clase me permite establecer una ventana la cual sera la maqueta para que esta funcione como un analizador del texto ingresado en un JTextArea
  * @author luis
  */
 public class VentanaAnalizador extends javax.swing.JFrame {
@@ -39,8 +39,10 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         numeroLinea=new NumeroLinea(jTextArea1);
+        //Asignamos un numero de linea al Schroll panel
         jScrollPane1.setRowHeaderView(numeroLinea);
         buscarPatrones.requestFocus();
+        //Ocultamos los botonees de nuestra ventana
         reporteErrores.setVisible(false);
         recuentoLexema.setVisible(false);
         afdOptimo.setEnabled(false);
@@ -48,26 +50,50 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         reporteToken.setVisible(false);
     }
     
+    /**
+     * Este metodo me devuelve el JTextArea que esta establecida en esta ventana
+     * @return
+     */
     public JTextArea getArea(){
         return this.jTextArea1;
     }
     
+    /**
+     * Este metodo me devuelve el boton de reporte de tokens que esta establecida en esta ventana
+     * @return
+     */
     public JButton getReporteTokens(){
         return this.reporteToken;
     }
     
+    /**
+     * Este metodo me devuelve el boton de reporte de errores que esta establecida en esta ventana
+     * @return
+     */
     public JButton getReporteErrores(){
         return this.reporteErrores;
     }
     
+    /**
+     * Este metodo me devuelve el boton de recuento de lexemas que esta establecida en esta ventana
+     * @return
+     */
     public JButton getRecuentoLexemas(){
         return this.recuentoLexema;
     }
     
+    /**
+     * Este metodo me devuelve el boton de AFD que esta establecida en esta ventana
+     * @return
+     */
     public JButton getAFD(){
         return this.afdOptimo;
     }
     
+    /**
+     * Este metodo me devuelve el boton de recuperacion de errores que esta establecida en esta ventana
+     * @return
+     */
     public JButton getRecuperacionErrores(){
         return this.recuperarErrores;
     }
@@ -266,6 +292,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
 
     private void buscarPatronesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarPatronesActionPerformed
         try {
+            //Al presionar el boton de manejador procedemos a resaltar el texto establecido en la busqueda
             manejador.resaltarTexto(CargaDatos.ventanaPatrones.getArea());
         } catch (BadLocationException ex) {
             Logger.getLogger(VentanaAnalizador.class.getName()).log(Level.SEVERE, null, ex);
@@ -348,18 +375,22 @@ public class VentanaAnalizador extends javax.swing.JFrame {
     }//GEN-LAST:event_guardarCambiosKeyPressed
 
     private void analizarTokenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analizarTokenActionPerformed
+        //Convocamos al manejador para poder detectar los Tokens
         MenejadorAnalizador manejadorSecundario= new  MenejadorAnalizador();
+        //Reiniciamos los arrays
         manejadores.MenejadorAnalizador.errores.clear();
         manejadores.MenejadorAnalizador.token.clear();
         manejadores.MenejadorAnalizador.recuentoLexema.clear();
         manejadores.MenejadorAnalizador.generacionAFD.clear();
         manejadores.MenejadorAnalizador.recuperacionErrores.clear();
+        //Analizamos los Tokens
         manejadorSecundario.analizarTokens(jTextArea1);
         manejadorSecundario.verificarBotones();
     }//GEN-LAST:event_analizarTokenActionPerformed
 
     private void reporteErroresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reporteErroresActionPerformed
         VentanaTablaErrores ventana = new VentanaTablaErrores();
+        //Establecemos un manejador para nuestros errores
         ManejadorTablaError manejadorError= new ManejadorTablaError();
         manejadorError.llenarTabla(ventana);
         ventana.setVisible(true);
@@ -369,6 +400,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
     private void reporteTokenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reporteTokenActionPerformed
         VentanaTablaToken ventana = new VentanaTablaToken();
         ManejadorTablaToken manejadorToken= new ManejadorTablaToken();
+        //Procedemos a llenar la tabla dekl reporte de tokens establecidos con anterioridad
         manejadorToken.llenarTabla(ventana);
         ventana.setVisible(true);
         this.setVisible(false);
@@ -380,8 +412,10 @@ public class VentanaAnalizador extends javax.swing.JFrame {
 
     private void recuentoLexemaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recuentoLexemaActionPerformed
         Token token= new Token();
+        //Recontamos los lexemas establecidos en el sistema
         token.recuentoLexema();
         VentanaTablaRecuentoLexemas ventana = new VentanaTablaRecuentoLexemas();
+        //Llenamos la tabla de recuento de lexemas
         ManejadorTablaRecuento manejadorTablaRecuento= new ManejadorTablaRecuento();
         manejadorTablaRecuento.llenarTabla(ventana);
         ventana.setVisible(true);
@@ -393,7 +427,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
         int response = JOptionPane.showConfirmDialog(this,"¿Quieres Guardar los cambios en el archivo de Entrada?", "GUARDAR",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
         if (response==JOptionPane.YES_OPTION){
             try {
-                //Salimos del programa
+                //Guardamos el archivo del texto de entrada
                 guardar.GuardaraArchivo(this.getArea().getText());
             } catch (IOException ex) {
                 Logger.getLogger(VentanaAnalizador.class.getName()).log(Level.SEVERE, null, ex);
@@ -405,6 +439,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
     private void afdOptimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_afdOptimoActionPerformed
         VentanaAFDOptimo ventana = new VentanaAFDOptimo();
         ManejadorAFD manejador= new ManejadorAFD();
+        //Llenamos la tabla del automata finito determinista asignado con anterioridad
         manejador.llenarTextArea(ventana);
         ventana.setVisible(true);
         this.setVisible(false);
@@ -417,6 +452,7 @@ public class VentanaAnalizador extends javax.swing.JFrame {
     private void recuperarErroresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recuperarErroresActionPerformed
         VentanaRecuperacionErrores ventana = new VentanaRecuperacionErrores();
         ManejadorRecuperacionErrores manejador= new ManejadorRecuperacionErrores();
+        //Llenamos la tabla de recuperacion de errores establecidos con anterioridad
         manejador.llenarTextArea(ventana);
         ventana.setVisible(true);
         this.setVisible(false);

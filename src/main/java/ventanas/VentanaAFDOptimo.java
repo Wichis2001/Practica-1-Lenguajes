@@ -12,7 +12,7 @@ import manejadores.MenejadorAnalizador;
 import tokens.NumeroLinea;
 
 /**
- *
+ * Esta ventana me perite establecer un automata finito determinista a travez de los datos ingresados en el mismo
  * @author luis
  */
 public class VentanaAFDOptimo extends javax.swing.JFrame {
@@ -27,6 +27,10 @@ public class VentanaAFDOptimo extends javax.swing.JFrame {
         this.jTextArea1.setEditable(false);
     }
     
+    /**
+     * Este metodo me devuelve el JTextArea que esta establecida en esta ventana
+     * @return
+     */
     public JTextArea getTextArea(){
         return this.jTextArea1;
     }
