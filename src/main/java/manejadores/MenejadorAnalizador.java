@@ -22,6 +22,7 @@ import tokens.Token;
  * @author luis
  */
 public class MenejadorAnalizador {
+        String tokenError;
         int columnaError=0;
         int columnaTemporal=0;
         Errores error = new Errores();
@@ -256,6 +257,7 @@ public class MenejadorAnalizador {
                 generacionAFD.add(String.valueOf(tmp));
                 if((posicion+1) < palabra.length()){
                     if(estadoActual==-1&&palabra.charAt(posicion+1) != ' '&&palabra.charAt(posicion+1) != '\n'){
+                        tokenError+=token;
                         this.verificarErrores();
                         estadoActual=-1;
                         posicion=espacioExtra-1;
@@ -360,6 +362,9 @@ public class MenejadorAnalizador {
                 if((espacioExtra+1) < palabra.length()){
                     if(estadoActual2==-1&&palabra.charAt(espacioExtra+1) != ' '&&palabra.charAt(espacioExtra+1) != '\n'){
                         estadoActual2=0;
+                        if(token!=null){
+                            tokenError+=token;
+                        }
                         token="";
                     } else if(estadoActual2==-1){
                         seguirLeyendo=false;
@@ -370,9 +375,31 @@ public class MenejadorAnalizador {
         }
         if(token!=("")){
             System.out.println("*********Termino en el estado "+ getEstadoAceptacion(estadoActual2) + " token actual : "+token);
+            String eliminadorNull="";
+            char letra;
+            if(tokenError.length() >  4){
+                for (int i = 0; i < 4; i++) {
+                    eliminadorNull=eliminadorNull+tokenError.charAt(i);
+                }
+                if(eliminadorNull.equals("null")){
+                    eliminadorNull="";
+                    for (int i = 4; i < tokenError.length(); i++) {
+                        eliminadorNull=eliminadorNull+tokenError.charAt(i);
+                    }
+                    
+                } else {
+                    eliminadorNull="";
+                    eliminadorNull=tokenError;
+                }  
+            } else{
+                eliminadorNull="";
+                eliminadorNull=tokenError;
+            }
+            String tokenCulminado= eliminadorNull+token;          
+            System.out.println(tokenCulminado+" <- Error, en "+eliminadorNull+", pero detecta token "+getEstadoAceptacion(estadoActual2)+" = "+token);
+            tokenError="";
+            eliminadorNull="";
             System.out.println("\n");
-        } 
-        
-        
+        }  
     }   
 }
